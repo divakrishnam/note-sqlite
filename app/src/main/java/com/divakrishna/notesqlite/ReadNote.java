@@ -37,6 +37,13 @@ public class ReadNote extends ListActivity implements AdapterView.OnItemLongClic
 
         ListView listView = findViewById(android.R.id.list);
         listView.setOnItemLongClickListener(this);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note note = (Note) getListAdapter().getItem(position);
+                switchToGetData(note.getId());
+            }
+        });
     }
 
     @Override
@@ -57,6 +64,16 @@ public class ReadNote extends ListActivity implements AdapterView.OnItemLongClic
                 dialog.dismiss();
             }
         });
+
+        hapusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbSource.deleteNote(note.getId());
+                dialog.dismiss();
+                finish();
+                startActivity(getIntent());
+            }
+        });
         return true;
     }
 
@@ -70,6 +87,17 @@ public class ReadNote extends ListActivity implements AdapterView.OnItemLongClic
 
         intent.putExtras(bundle);
         finale();
+        startActivity(intent);
+    }
+
+    public void switchToGetData(long id){
+        Note note = dbSource.getNote(id);
+        Intent intent = new Intent(this, ReadSingleData.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", note.getId());
+        bundle.putString("isi_catatan", note.getIsiCatatan());
+        bundle.putString("tanggal_catatan", note.getTanggalCatatan());
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 

@@ -86,4 +86,9 @@ public class DBSource {
 
         database.update(DBHelper.TABLE_NAME, args, strFilter, null);
     }
+
+    public void deleteNote(long id){
+        String strFilter = "_id="+id;
+        database.delete(DBHelper.TABLE_NAME, strFilter, null);
+    }
 }
